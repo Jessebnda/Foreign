@@ -1,44 +1,26 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("dev.flutter.flutter-gradle-plugin")
+    // id("kotlin-android") si usas Kotlin
 }
 
 android {
-    namespace = "com.example.flutter_application_1"
-
-    // Usa compileSdk definido por Flutter
-    compileSdk = flutter.compileSdkVersion
-
-    // En vez de 'ndkVersion = flutter.ndkVersion', pon NDK 27
-    ndkVersion = "27.0.12077973"
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.example.flutter_application_1"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-        resValue "string", "google_api_key", "\"${System.getenv("GOOGLE_API_KEY") ?: "TU_API_KEY_DEFAULT"}\""
-}
+        minSdk = 21
+        targetSdk = 33
+        versionCode = 1
+        versionName = "1.0"
+
+        // Kotlin DSL para resValue
+        resValue("string", "google_api_key", "\"${System.getenv("GOOGLE_API_KEY") ?: "TU_API_KEY_DEFAULT"}\"")
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             signingConfig = signingConfigs.getByName("debug")
+            // ProGuard, minifyEnabled, etc.
         }
     }
-}
-
-flutter {
-    source = "../.."
 }
