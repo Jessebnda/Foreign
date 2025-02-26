@@ -28,6 +28,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        resValue "string", "google_api_key", "\"${System.getenv("GOOGLE_API_KEY") ?: "TU_API_KEY_DEFAULT"}\""
+}
     }
 
     buildTypes {

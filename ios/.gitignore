@@ -32,3 +32,12 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Variables de entorno
+.env
+apis.env
+
+# Archivos de configuración sensibles de iOS (si creaste uno, por ejemplo Keys.xcconfig)
+ios/Runner/Keys.xcconfig
+
+# Otras configuraciones sensibles

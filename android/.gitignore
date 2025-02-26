@@ -12,3 +12,10 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Ocultar archivos sensibles de Android e iOS
+android/app/src/main/res/values/google_maps_api.xml
+android/app/src/main/AndroidManifest.xml
+ios/Runner/GoogleService-Info.plist
+ios/Runner/Info.plist
+
