@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:dio/dio.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GoogleMapScreen extends StatefulWidget {
   const GoogleMapScreen({Key? key}) : super(key: key);
+
   @override
   State<GoogleMapScreen> createState() => _GoogleMapScreenState();
 }
@@ -15,12 +16,166 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   bool showGyms = false;
   bool showStores = false;
   final Set<Marker> _markers = {};
-  final String _googleApiKey = 'TU_API_KEY';
-  
+
+  // Datos estáticos para los marcadores de gimnasios
+  final List<Map<String, dynamic>> gymMarkers = [
+    {
+      "id": "gym1",
+      "name": "Gym Fitness Center",
+      "lat": 32.6245,
+      "lng": -115.4523,
+      "description":
+          "Este gimnasio cuenta con excelentes instalaciones y equipo de última generación."
+    }
+  ];
+
+  // Datos estáticos para los marcadores de mercados
+  final List<Map<String, dynamic>> marketMarkers = [
+    {
+      "id": "market1",
+      "name": "Mercado Local",
+      "lat": 32.6300,
+      "lng": -115.4500,
+      "description": "Un mercado con productos frescos y locales."
+    }
+  ];
+
+  // Marcadores genéricos (siempre se muestran)
+  final List<Map<String, dynamic>> defaultMarkers = [
+    {
+      "id": "default1",
+      "name": "Lugar de Interés",
+      "lat": 32.6280,
+      "lng": -115.4550,
+      "description":
+          "Información general del lugar sin categoría específica."
+    }
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _updateMarkers();
+  }
+
+  void _updateMarkers() {
+    _markers.clear();
+
+    // Agrega marcadores de gimnasios si están activados
+    if (showGyms) {
+      for (var markerData in gymMarkers) {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(markerData["id"]),
+            position: LatLng(markerData["lat"], markerData["lng"]),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueMagenta),
+            onTap: () {
+              _showCustomInfo(
+                title: markerData["name"],
+                description: markerData["description"],
+                location: LatLng(markerData["lat"], markerData["lng"]),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // Agrega marcadores de mercados si están activados
+    if (showStores) {
+      for (var markerData in marketMarkers) {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(markerData["id"]),
+            position: LatLng(markerData["lat"], markerData["lng"]),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueBlue),
+            onTap: () {
+              _showCustomInfo(
+                title: markerData["name"],
+                description: markerData["description"],
+                location: LatLng(markerData["lat"], markerData["lng"]),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // Agrega siempre los marcadores genéricos
+    for (var markerData in defaultMarkers) {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(markerData["id"]),
+          position: LatLng(markerData["lat"], markerData["lng"]),
+          icon: BitmapDescriptor.defaultMarker,
+          onTap: () {
+            _showCustomInfo(
+              title: markerData["name"],
+              description: markerData["description"],
+              location: LatLng(markerData["lat"], markerData["lng"]),
+            );
+          },
+        ),
+      );
+    }
+
+    setState(() {});
+  }
+
+  void _showCustomInfo({
+    required String title,
+    required String description,
+    required LatLng location,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(description),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.map),
+                label: const Text('Ver en Google Maps'),
+                onPressed: () {
+                  _openGoogleMaps(location);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _openGoogleMaps(LatLng location) async {
+    final googleUrl = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
+    if (await canLaunchUrl(googleUrl)) {
+      await launchUrl(googleUrl);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo abrir Google Maps')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Maps')),
+      appBar: AppBar(title: const Text('Mapa de Lugares')),
       body: Stack(
         children: [
           GoogleMap(
@@ -51,7 +206,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                           onChanged: (val) {
                             setState(() {
                               showGyms = val ?? false;
-                              _updatePlaces();
+                              _updateMarkers();
                             });
                           },
                         ),
@@ -65,7 +220,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                           onChanged: (val) {
                             setState(() {
                               showStores = val ?? false;
-                              _updatePlaces();
+                              _updateMarkers();
                             });
                           },
                         ),
@@ -80,57 +235,5 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         ],
       ),
     );
-  }
-  
-  Future<void> _updatePlaces() async {
-    setState(() => _markers.clear());
-    if (showGyms) {
-      await _textSearch("One Premium", colorHue: BitmapDescriptor.hueMagenta);
-      await _textSearch("Family Fitness", colorHue: BitmapDescriptor.hueMagenta);
-      await _textSearch("Ultra Gym", colorHue: BitmapDescriptor.hueMagenta);
-      await _textSearch("Evolution Gym", colorHue: BitmapDescriptor.hueMagenta);
-    }
-    if (showStores) {
-      await _textSearch("Walmart", colorHue: BitmapDescriptor.hueBlue);
-      await _textSearch("Calimax", colorHue: BitmapDescriptor.hueBlue);
-      await _textSearch("Costco", colorHue: BitmapDescriptor.hueBlue);
-      await _textSearch("Oxxo", colorHue: BitmapDescriptor.hueBlue);
-    }
-  }
-  
-  Future<void> _textSearch(String query, {double colorHue = BitmapDescriptor.hueRed}) async {
-    final lat = _center.latitude;
-    final lng = _center.longitude;
-    const radius = 5000;
-    final url =
-        'https://maps.googleapis.com/maps/api/place/textsearch/json'
-        '?query=$query'
-        '&location=$lat,$lng'
-        '&radius=$radius'
-        '&key=$_googleApiKey';
-    try {
-      final response = await Dio().get(url);
-      final data = response.data;
-      if (data['status'] == 'OK') {
-        for (var result in data['results']) {
-          final placeLat = result['geometry']['location']['lat'];
-          final placeLng = result['geometry']['location']['lng'];
-          final name = result['name'] ?? 'Lugar sin nombre';
-          _markers.add(
-            Marker(
-              markerId: MarkerId('$name-$placeLat-$placeLng'),
-              position: LatLng(placeLat, placeLng),
-              infoWindow: InfoWindow(title: name),
-              icon: BitmapDescriptor.defaultMarkerWithHue(colorHue),
-            ),
-          );
-        }
-        setState(() {});
-      } else {
-        debugPrint('Google Places: status = ${data['status']}');
-      }
-    } catch (e) {
-      debugPrint('Error en textSearch: $e');
-    }
   }
 }
