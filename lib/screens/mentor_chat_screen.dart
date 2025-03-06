@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MentorChatScreen extends StatefulWidget {
   final Map<String, String> mentor;
-  const MentorChatScreen({Key? key, required this.mentor}) : super(key: key);
+  const MentorChatScreen({super.key, required this.mentor});
 
   @override
   State<MentorChatScreen> createState() => _MentorChatScreenState();

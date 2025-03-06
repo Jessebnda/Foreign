@@ -5,10 +5,10 @@ class PublicationDetailScreen extends StatelessWidget {
   final String imagePath;
 
   const PublicationDetailScreen({
-    Key? key,
+    super.key,
     required this.post,
     required this.imagePath,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

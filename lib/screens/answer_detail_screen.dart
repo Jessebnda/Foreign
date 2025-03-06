@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AnswerDetailScreen extends StatefulWidget {
   final Map<String, dynamic> answer;
-  const AnswerDetailScreen({Key? key, required this.answer}) : super(key: key);
+  const AnswerDetailScreen({super.key, required this.answer});
 
   @override
   State<AnswerDetailScreen> createState() => _AnswerDetailScreenState();

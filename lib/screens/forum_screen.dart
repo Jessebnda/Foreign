@@ -28,7 +28,7 @@ final List<Map<String, dynamic>> forumData = [
 ];
 
 class ForumScreen extends StatefulWidget {
-  const ForumScreen({Key? key}) : super(key: key);
+  const ForumScreen({super.key});
 
   @override
   State<ForumScreen> createState() => _ForumScreenState();

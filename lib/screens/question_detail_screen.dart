@@ -3,7 +3,7 @@ import 'answer_detail_screen.dart';
 
 class QuestionDetailScreen extends StatefulWidget {
   final Map<String, dynamic> question;
-  const QuestionDetailScreen({Key? key, required this.question}) : super(key: key);
+  const QuestionDetailScreen({super.key, required this.question});
 
   @override
   State<QuestionDetailScreen> createState() => _QuestionDetailScreenState();

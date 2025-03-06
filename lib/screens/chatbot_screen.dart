@@ -4,7 +4,7 @@ import '../models/chat_message.dart';
 import '../services/api_service.dart';
 
 class ChatbotScreen extends StatefulWidget {
-  const ChatbotScreen({Key? key}) : super(key: key);
+  const ChatbotScreen({super.key});
   @override
   State<ChatbotScreen> createState() => _ChatbotScreenState();
 }
@@ -14,7 +14,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
   final String _chatbotUrl =
-      'https://magicloops.dev/api/loop/APIKEY';
+      'https://magicloops.dev/api/loop/Magic_API_KEY/run';
 
   Future<void> _sendMessage() async {
     final text = _controller.text.trim();

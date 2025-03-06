@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({Key? key}) : super(key: key);
+  const GoogleMapScreen({super.key});
 
   @override
   State<GoogleMapScreen> createState() => _GoogleMapScreenState();
@@ -12,7 +12,7 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   GoogleMapController? _mapController;
   static const LatLng _center = LatLng(32.6245, -115.4523);
-  double _zoomVal = 14;
+  final double _zoomVal = 14;
   bool showGyms = false;
   bool showStores = false;
   final Set<Marker> _markers = {};

@@ -17,7 +17,7 @@ final List<Map<String, String>> mentorsData = [
 ];
 
 class MentorListScreen extends StatelessWidget {
-  const MentorListScreen({Key? key}) : super(key: key);
+  const MentorListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

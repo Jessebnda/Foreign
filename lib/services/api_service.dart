@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 Future<String> fetchChatbotAnswer(Map<String, String> params) async {
   final String question = params['question']!;

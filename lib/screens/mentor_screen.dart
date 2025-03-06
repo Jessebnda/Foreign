@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'mentor_list_screen.dart';     // <-- Lista de mentores
-import 'mentor_chat_screen.dart';    // <-- Si prefieres un chat local con mentores
+// <-- Si prefieres un chat local con mentores
 import 'chatbot_screen.dart';        // <-- Si tu Chatbot es distinto, usa tu import real
 
 class MentorScreen extends StatelessWidget {
-  const MentorScreen({Key? key}) : super(key: key);
+  const MentorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
