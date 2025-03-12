@@ -1,0 +1,3 @@
+workspace 'FLUTTER_APPLICATION_1.xcworkspace'
+
+platform :ios, '14.0'
