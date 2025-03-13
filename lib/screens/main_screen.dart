@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'placeholder_screen.dart';
+import 'forum_screen.dart';
 
 
 class MainScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = const [
     PlaceholderScreen(title: 'Feed'),
     PlaceholderScreen(title: 'Mapa'),
-    PlaceholderScreen(title: 'Foro'),
+    ForumScreen(),
     PlaceholderScreen(title: 'Mentor'),
     PlaceholderScreen(title: 'Perfil'),
   ];
