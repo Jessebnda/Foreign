@@ -8,10 +8,12 @@ final List<Map<String, dynamic>> forumData = [
     "answers": [
       {
         "content": "Puedes ir al centro, hay varios bares y música en vivo.",
+        "likes": 5,
         "comments": ["Suena interesante", "Me apunto!"]
       },
       {
         "content": "También hay eventos en la zona del malecón los fines de semana.",
+        "likes": 2,
         "comments": ["Gracias por la info", "Me gusta la idea"]
       },
     ],
@@ -21,6 +23,7 @@ final List<Map<String, dynamic>> forumData = [
     "answers": [
       {
         "content": "Yo recomiendo 'La Casa Sonora', carne asada increíble.",
+        "likes": 7,
         "comments": ["¿Dónde queda?", "Amo la carne asada!"]
       }
     ],
@@ -52,9 +55,7 @@ class _ForumScreenState extends State<ForumScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Foro"),
-      ),
+      appBar: AppBar(title: const Text("Foro")),
       body: Column(
         children: [
           Expanded(
@@ -66,18 +67,31 @@ class _ForumScreenState extends State<ForumScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => QuestionDetailScreen(question: question),
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => QuestionDetailScreen(question: question),
+                        transitionsBuilder: (_, animation, __, child) {
+                          return FadeTransition(opacity: animation, child: child);
+                        },
                       ),
                     );
                   },
                   child: Card(
-                    margin: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 2,
+                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: ListTile(
-                      title: Text(question["title"]),
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage("assets/img7.jpg"),
+                      ),
+                      title: Text(
+                        question["title"],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Text(
                         "${(question["answers"] as List).length} respuestas",
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
+                      trailing: const Icon(Icons.chat_bubble_outline, color: Colors.grey),
                     ),
                   ),
                 );
@@ -91,9 +105,14 @@ class _ForumScreenState extends State<ForumScreen> {
                 Expanded(
                   child: TextField(
                     controller: _questionController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[100],
                       hintText: "Escribe tu pregunta...",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
