@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'feed_screen.dart';
 import 'placeholder_screen.dart';
+import 'map_screen.dart';
 import 'forum_screen.dart';
-
+import 'mentor_screen.dart';
+import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,11 +18,11 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    PlaceholderScreen(title: 'Feed'),
-    PlaceholderScreen(title: 'Mapa'),
+    FeedScreen(),
+    GoogleMapScreen(),
     ForumScreen(),
-    PlaceholderScreen(title: 'Mentor'),
-    PlaceholderScreen(title: 'Perfil'),
+    MentorScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

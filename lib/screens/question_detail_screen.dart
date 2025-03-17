@@ -18,7 +18,6 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
     setState(() {
       (widget.question["answers"] as List).insert(0, {
         "content": text,
-        "likes": 0,
         "comments": []
       });
       _answerController.clear();
@@ -29,7 +28,9 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
   Widget build(BuildContext context) {
     final answers = widget.question["answers"] as List;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.question["title"])),
+      appBar: AppBar(
+        title: Text(widget.question["title"]),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -41,30 +42,17 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => AnswerDetailScreen(answer: answer)),
+                      MaterialPageRoute(
+                        builder: (_) => AnswerDetailScreen(answer: answer),
+                      ),
                     );
                   },
                   child: Card(
                     margin: const EdgeInsets.all(8),
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage("assets/img7.jpg"),
-                      ),
                       title: Text(answer["content"]),
-                      subtitle: Text("${(answer["comments"] as List).length} comentarios"),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.favorite_border),
-                            onPressed: () {
-                              setState(() {
-                                answer["likes"]++;
-                              });
-                            },
-                          ),
-                          Text("${answer["likes"]}"),
-                        ],
+                      subtitle: Text(
+                        "${(answer["comments"] as List).length} comentarios",
                       ),
                     ),
                   ),
@@ -79,14 +67,9 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
                 Expanded(
                   child: TextField(
                     controller: _answerController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey[100],
+                    decoration: const InputDecoration(
                       hintText: "Escribe tu respuesta...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
                 ),
