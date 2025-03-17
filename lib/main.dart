@@ -1,10 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
+import 'package:firebase_core/firebase_core.dart';  // Agregar la importación
 import 'screens/main_screen.dart';
 import 'package:device_preview/device_preview.dart';
-void main() {
+import 'firebase_options.dart';  // Agregar importación para las opciones de Firebase
+
+void main() async {
+  // Asegúrate de que Firebase esté inicializado antes de correr la app
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,  // Usamos el archivo de configuración generado
+  );
+
   runApp(
-    DevicePreview(builder: (context)=>
-      const MyApp())
+    DevicePreview(builder: (context) => const MyApp())
   );
 }
 
@@ -17,28 +25,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // Definimos el tema global de la aplicación
       theme: ThemeData(
-        // Un tema oscuro (brightness: Brightness.dark) o define scaffoldBackgroundColor manual
         brightness: Brightness.dark,
-        // O bien, si prefieres sin brightness:
-        // scaffoldBackgroundColor: const Color(0xFF121212),
-        
         primarySwatch: Colors.purple,
-        
-        // Personaliza la AppBar
         appBarTheme: const AppBarTheme(
           elevation: 0,
           backgroundColor: Colors.transparent,
           centerTitle: true,
         ),
-        
-        // Personaliza el BottomNavigationBar
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: const Color(0xFF121212),
           selectedItemColor: Colors.purpleAccent,
           unselectedItemColor: Colors.grey,
         ),
-        
-        // Personaliza la TabBar
         tabBarTheme: const TabBarTheme(
           labelColor: Colors.purpleAccent,
           unselectedLabelColor: Colors.grey,
