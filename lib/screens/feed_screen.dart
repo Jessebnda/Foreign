@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'publication_detail_screen.dart';
 
-// Datos de ejemplo para publicaciones (pueden ser los mismos para ambas pestañas)
+// Datos de ejemplo para publicaciones
 final List<Map<String, dynamic>> postsData = [
   {"user": "Alice", "content": "Evento deportivo del fin de semana."},
   {"user": "Bob", "content": "Concierto en vivo en el centro."},
@@ -10,7 +11,7 @@ final List<Map<String, dynamic>> postsData = [
   {"user": "Frank", "content": "Show de comedia local."},
 ];
 
-// Datos para Weekly events (puedes usar un subconjunto o datos diferentes)
+// Datos para Weekly events (pueden ser los mismos o diferentes)
 final List<Map<String, dynamic>> weeklyEvents = [
   {"user": "Alice", "content": "Evento deportivo del fin de semana."},
   {"user": "Bob", "content": "Concierto en vivo en el centro."},
@@ -70,8 +71,7 @@ class FeedScreen extends StatelessWidget {
                           right: 8,
                           child: CircleAvatar(
                             radius: 20,
-                            backgroundImage:
-                                AssetImage('assets/images/img7.jpg'),
+                            backgroundImage: AssetImage('assets/images/img7.jpg'),
                           ),
                         ),
                       ],
@@ -87,8 +87,7 @@ class FeedScreen extends StatelessWidget {
   }
 
   /// Construye un grid de publicaciones a partir de la lista de posts
-  Widget _buildMainFeedGrid(
-      BuildContext context, List<Map<String, dynamic>> posts) {
+  Widget _buildMainFeedGrid(BuildContext context, List<Map<String, dynamic>> posts) {
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: posts.length,
@@ -133,8 +132,7 @@ class FeedScreen extends StatelessWidget {
                   right: 8,
                   child: CircleAvatar(
                     radius: 20,
-                    backgroundImage:
-                        AssetImage('assets/images/img7.jpg'),
+                    backgroundImage: AssetImage('assets/images/img7.jpg'),
                   ),
                 ),
               ],
@@ -173,99 +171,6 @@ class FeedScreen extends StatelessWidget {
             ),
             // Pestaña "Friends": Solo grid de publicaciones
             _buildMainFeedGrid(context, postsData),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class PublicationDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> post;
-  final String imagePath;
-
-  const PublicationDetailScreen({
-    Key? key,
-    required this.post,
-    required this.imagePath,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Comentarios de prueba
-    final List<String> testComments = [
-      "Comentario prueba 1",
-      "Comentario prueba 2",
-      "Comentario prueba 3",
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Detalle de la Publicación"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Imagen de la publicación, se puede limitar su altura si es muy grande
-            SizedBox(
-              height: 300,
-              width: double.infinity,
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Información del usuario: avatar y nombre
-                  Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 20,
-                        backgroundImage:
-                            AssetImage('assets/images/img7.jpg'),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        post["user"] ?? "",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  // Contenido de la publicación
-                  Text(
-                    post["content"] ?? "",
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 20),
-                  const Divider(),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Comentarios:",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  // Listado de comentarios de prueba
-                  ...testComments.map(
-                    (comment) => Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 4),
-                      child: Text(comment),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

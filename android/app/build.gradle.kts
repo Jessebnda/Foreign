@@ -1,19 +1,19 @@
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")  // Plugin necesario para Firebase
     // END: FlutterFire Configuration
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.example.flutter_application_1"
+    namespace = "com.example.flutter_application_1"  // Cambia esto por el namespace de tu app
 
     // Usa compileSdk definido por Flutter
     compileSdk = flutter.compileSdkVersion
 
-    // En vez de 'ndkVersion = flutter.ndkVersion', pon NDK 27
+    // En vez de 'ndkVersion = flutter.ndkVersion', especifica NDK 27
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -26,11 +26,14 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.flutter_application_1"
+        applicationId = "com.example.flutter_application_1"  // Cambia esto por el ID de tu app
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Resuelve la ambigüedad en firebase_app_distribution_android
+        missingDimensionStrategy("default", "production")
     }
 
     buildTypes {
@@ -41,5 +44,5 @@ android {
 }
 
 flutter {
-    source = "../.."
+    source = "../.."  // Ruta al directorio de tu fuente Flutter
 }

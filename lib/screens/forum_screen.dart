@@ -68,7 +68,8 @@ class _ForumScreenState extends State<ForumScreen> {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => QuestionDetailScreen(question: question),
+                        pageBuilder: (_, __, ___) =>
+                            QuestionDetailScreen(question: question),
                         transitionsBuilder: (_, animation, __, child) {
                           return FadeTransition(opacity: animation, child: child);
                         },
@@ -76,12 +77,14 @@ class _ForumScreenState extends State<ForumScreen> {
                     );
                   },
                   child: Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     elevation: 2,
                     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage("assets/img7.jpg"),
+                      leading: const CircleAvatar(
+                        backgroundImage: AssetImage("assets/images/img7.jpg"),
                       ),
                       title: Text(
                         question["title"],
@@ -91,13 +94,15 @@ class _ForumScreenState extends State<ForumScreen> {
                         "${(question["answers"] as List).length} respuestas",
                         style: TextStyle(color: Colors.grey[600]),
                       ),
-                      trailing: const Icon(Icons.chat_bubble_outline, color: Colors.grey),
+                      trailing:
+                          const Icon(Icons.chat_bubble_outline, color: Colors.grey),
                     ),
                   ),
                 );
               },
             ),
           ),
+          // TextField para escribir la pregunta
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -105,10 +110,12 @@ class _ForumScreenState extends State<ForumScreen> {
                 Expanded(
                   child: TextField(
                     controller: _questionController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: Colors.grey[800], // Fondo oscuro
                       hintText: "Escribe tu pregunta...",
+                      hintStyle: const TextStyle(color: Colors.grey), // Hint gris claro
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,

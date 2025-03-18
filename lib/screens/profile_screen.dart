@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // Aquí iría la navegación a la pantalla de edición
+              // Navegar a pantalla de edición si se requiere
             },
           )
         ],
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final imagePath = publications[index];
               return InkWell(
                 onTap: () {
-                  // Al tocar una publicación se navega al detalle, enviando datos de ejemplo
+                  // Navega a PublicationDetailScreen reutilizando el widget de detalles
                   Navigator.push(
                     context,
                     MaterialPageRoute(

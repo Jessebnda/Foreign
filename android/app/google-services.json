@@ -1,29 +1,25 @@
 {
-  "project_info": {
-    "project_number": "497729458678",
-    "project_id": "foreign-e6040",
-    "storage_bucket": "foreign-e6040.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:497729458678:android:b8a53f74eafc0c2b2cf7d7",
-        "android_client_info": {
-          "package_name": "com.example.flutter_application_1"
+    "project_info": {
+        "project_number": "497729458678",
+        "project_id": "foreign-e6040",
+        "storage_bucket": "foreign-e6040.firebasestorage.app"
+    },
+    "client": [{
+        "client_info": {
+            "mobilesdk_app_id": "1:497729458678:android:b8a53f74eafc0c2b2cf7d7",
+            "android_client_info": {
+                "package_name": "com.example.flutter_application_1"
+            }
+        },
+        "oauth_client": [],
+        "api_key": [{
+            "current_key": "AIzaSyBgTukUaL5oSSSCG0y6i-g48HwGsE5Wt4M"
+        }],
+        "services": {
+            "appinvite_service": {
+                "other_platform_oauth_client": []
+            }
         }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBgTukUaL5oSSSCG0y6i-g48HwGsE5Wt4M"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    }],
+    "configuration_version": "1"
 }

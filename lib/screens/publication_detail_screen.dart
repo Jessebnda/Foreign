@@ -5,109 +5,113 @@ class PublicationDetailScreen extends StatelessWidget {
   final String imagePath;
 
   const PublicationDetailScreen({
-    super.key,
+    Key? key,
     required this.post,
     required this.imagePath,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Comentarios de prueba
+    // Lista de comentarios de ejemplo (sustitúyela por tus datos reales)
     final List<String> testComments = [
       "Comentario prueba 1",
       "Comentario prueba 2",
       "Comentario prueba 3",
     ];
 
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detalle de la Publicación"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Imagen principal
-          Image.asset(
-            imagePath,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(height: 10),
-          // Sección de contenido
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Info del usuario
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 20,
-                      backgroundImage: AssetImage('assets/images/img7.jpg'),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      post["user"] ?? "",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Imagen de la publicación
+            Image.asset(
+              imagePath,
+              width: double.infinity,
+              height: 300,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(height: 10),
+            // Contenido principal de la publicación
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Información del usuario: avatar y nombre
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 20,
+                        backgroundImage: AssetImage('assets/images/img7.jpg'),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                // Contenido de la publicación
-                Text(
-                  post["content"] ?? "",
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 20),
-                const Divider(),
-                const SizedBox(height: 10),
-                const Text(
-                  "Comentarios:",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                      const SizedBox(width: 10),
+                      Text(
+                        post["user"] ?? "",
+                        style: textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                // Lista de comentarios dentro de Cards
-                ...testComments.map(
-                  (comment) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            const CircleAvatar(
-                              radius: 15,
-                              backgroundImage:
-                                  AssetImage('assets/images/img7.jpg'),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                comment,
-                                style: const TextStyle(fontSize: 14),
+                  const SizedBox(height: 10),
+                  // Contenido de la publicación
+                  Text(
+                    post["content"] ?? "",
+                    style: textTheme.bodyLarge?.copyWith(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Comentarios:",
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Lista de comentarios en Cards
+                  ...testComments.map(
+                    (comment) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                radius: 18,
+                                backgroundImage:
+                                    AssetImage('assets/images/img7.jpg'),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  comment,
+                                  style: textTheme.bodyLarge?.copyWith(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

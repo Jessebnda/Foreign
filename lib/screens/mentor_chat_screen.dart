@@ -30,27 +30,37 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
       ),
       body: Column(
         children: [
+          // Lista de mensajes
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
+                final isUser = message.isUser;
                 return Align(
-                  alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 4),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: message.isUser ? Colors.purple[100] : Colors.grey[300],
+                      // Mensajes del usuario: lila claro; Mensajes del mentor: gris oscuro
+                      color: isUser ? Colors.purple[300] : Colors.grey[800],
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(message.text),
+                    child: Text(
+                      message.text,
+                      // Texto oscuro si el fondo es claro, blanco si el fondo es oscuro
+                      style: TextStyle(
+                        color: isUser ? Colors.black : Colors.white,
+                      ),
+                    ),
                   ),
                 );
               },
             ),
           ),
+          // TextField para enviar mensajes
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -58,9 +68,16 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
                       hintText: "Escribe tu mensaje...",
-                      border: OutlineInputBorder(),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      fillColor: Colors.grey[800],
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
@@ -78,7 +95,6 @@ class _MentorChatScreenState extends State<MentorChatScreen> {
   }
 }
 
-// Modelo simple de mensaje para el chat del mentor
 class ChatMessage {
   final String text;
   final bool isUser;

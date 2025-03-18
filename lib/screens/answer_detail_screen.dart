@@ -29,6 +29,7 @@ class _AnswerDetailScreenState extends State<AnswerDetailScreen> {
       ),
       body: Column(
         children: [
+          // Contenido de la respuesta
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
@@ -37,21 +38,38 @@ class _AnswerDetailScreenState extends State<AnswerDetailScreen> {
             ),
           ),
           const Divider(),
-          const Text(
+          // Sección de comentarios
+          Text(
             "Comentarios:",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: comments.length,
               itemBuilder: (context, index) {
                 final comment = comments[index];
-                return ListTile(
-                  title: Text(comment),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        comment,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
           ),
+          // Campo para agregar un nuevo comentario
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -69,7 +87,7 @@ class _AnswerDetailScreenState extends State<AnswerDetailScreen> {
                 ElevatedButton(
                   onPressed: _addComment,
                   child: const Text("Comentar"),
-                )
+                ),
               ],
             ),
           )

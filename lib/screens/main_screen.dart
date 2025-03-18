@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = const [
     FeedScreen(),
-    GoogleMapScreen(),
+    MapScreen(),
     ForumScreen(),
     MentorScreen(),
     ProfileScreen(),
@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
         // Criterio: Si es web o el ancho es mayor a 600px, mostramos NavigationRail
         final bool useRail = kIsWeb || constraints.maxWidth > 600;
 
-        if (!useRail) {
+        if (useRail) {
           // Pantallas grandes o web: NavigationRail a la izquierda
           return Scaffold(
             body: Row(

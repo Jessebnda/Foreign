@@ -1,44 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/google_places_service.dart';
 
-class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({super.key});
-
+class MapScreen extends StatefulWidget {
+  const MapScreen({Key? key}) : super(key: key);
+  
   @override
-  State<GoogleMapScreen> createState() => _GoogleMapScreenState();
+  State<MapScreen> createState() => _MapScreenState();
 }
 
-class _GoogleMapScreenState extends State<GoogleMapScreen> {
+class _MapScreenState extends State<MapScreen> {
   GoogleMapController? _mapController;
   static const LatLng _center = LatLng(32.6245, -115.4523);
   final double _zoomVal = 14;
-  bool showGyms = false;
-  bool showStores = false;
   final Set<Marker> _markers = {};
 
-  // Datos estáticos para los marcadores de gimnasios
-  final List<Map<String, dynamic>> gymMarkers = [
-    {
-      "id": "gym1",
-      "name": "Gym Fitness Center",
-      "lat": 32.6245,
-      "lng": -115.4523,
-      "description":
-          "Este gimnasio cuenta con excelentes instalaciones y equipo de última generación."
-    }
-  ];
+  // Instancia del servicio con tu clave API (reemplaza con la tuya)
+  final GooglePlacesService placesService =
+      GooglePlacesService(apiKey: 'APIKEY');
 
-  // Datos estáticos para los marcadores de mercados
-  final List<Map<String, dynamic>> marketMarkers = [
-    {
-      "id": "market1",
-      "name": "Mercado Local",
-      "lat": 32.6300,
-      "lng": -115.4500,
-      "description": "Un mercado con productos frescos y locales."
-    }
-  ];
+  // Lista de intereses disponibles y la selección inicial
+  final List<String> availablePlaceTypes = ["gym", "store", "bar", "restaurant"];
+  final List<String> selectedPlaceTypes = ["gym", "store"]; // selección inicial
 
   // Marcadores genéricos (siempre se muestran)
   final List<Map<String, dynamic>> defaultMarkers = [
@@ -47,69 +31,28 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       "name": "Lugar de Interés",
       "lat": 32.6280,
       "lng": -115.4550,
-      "description":
-          "Información general del lugar sin categoría específica."
+      "description": "Información general sin categoría específica."
     }
   ];
-
+  
   @override
   void initState() {
     super.initState();
     _updateMarkers();
   }
-
-  void _updateMarkers() {
+  
+  Future<void> _updateMarkers() async {
+    // Limpia marcadores anteriores
     _markers.clear();
-
-    // Agrega marcadores de gimnasios si están activados
-    if (showGyms) {
-      for (var markerData in gymMarkers) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(markerData["id"]),
-            position: LatLng(markerData["lat"], markerData["lng"]),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueMagenta),
-            onTap: () {
-              _showCustomInfo(
-                title: markerData["name"],
-                description: markerData["description"],
-                location: LatLng(markerData["lat"], markerData["lng"]),
-              );
-            },
-          ),
-        );
-      }
-    }
-
-    // Agrega marcadores de mercados si están activados
-    if (showStores) {
-      for (var markerData in marketMarkers) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(markerData["id"]),
-            position: LatLng(markerData["lat"], markerData["lng"]),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueBlue),
-            onTap: () {
-              _showCustomInfo(
-                title: markerData["name"],
-                description: markerData["description"],
-                location: LatLng(markerData["lat"], markerData["lng"]),
-              );
-            },
-          ),
-        );
-      }
-    }
-
-    // Agrega siempre los marcadores genéricos
+    
+    // Agrega siempre los marcadores por defecto
     for (var markerData in defaultMarkers) {
       _markers.add(
         Marker(
           markerId: MarkerId(markerData["id"]),
           position: LatLng(markerData["lat"], markerData["lng"]),
           icon: BitmapDescriptor.defaultMarker,
+          zIndex: 1.0,
           onTap: () {
             _showCustomInfo(
               title: markerData["name"],
@@ -120,10 +63,69 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         ),
       );
     }
-
+    
+    // Para cada interés seleccionado, llama a fetchPlaces usando el nuevo parámetro 'query'
+    for (String interest in selectedPlaceTypes) {
+      await _fetchPlaces(interest);
+    }
+    
     setState(() {});
   }
-
+  
+  Future<void> _fetchPlaces(String query) async {
+    try {
+      final List results = await placesService.fetchPlaces(
+        latitude: _center.latitude,
+        longitude: _center.longitude,
+        query: query,
+      );
+      
+      for (var place in results) {
+        final geometry = place['geometry'];
+        if (geometry == null) continue;
+        final location = geometry['location'];
+        final lat = location['lat'];
+        final lng = location['lng'];
+        final name = place['name'];
+        
+        // Asigna colores distintos para cada interés
+        double markerHue = BitmapDescriptor.hueRed;
+        switch (query) {
+          case 'gym':
+            markerHue = BitmapDescriptor.hueMagenta;
+            break;
+          case 'store':
+            markerHue = BitmapDescriptor.hueBlue;
+            break;
+          case 'bar':
+            markerHue = BitmapDescriptor.hueOrange;
+            break;
+          case 'restaurant':
+            markerHue = BitmapDescriptor.hueGreen;
+            break;
+        }
+        
+        _markers.add(
+          Marker(
+            markerId: MarkerId(place['place_id']),
+            position: LatLng(lat, lng),
+            icon: BitmapDescriptor.defaultMarkerWithHue(markerHue),
+            zIndex: 2.0,
+            onTap: () {
+              _showCustomInfo(
+                title: name,
+                description: place['formatted_address'] ?? '',
+                location: LatLng(lat, lng),
+              );
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error fetching places for query "$query": $e');
+    }
+  }
+  
   void _showCustomInfo({
     required String title,
     required String description,
@@ -140,8 +142,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             children: [
               Text(
                 title,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(description),
@@ -159,7 +160,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       },
     );
   }
-
+  
   Future<void> _openGoogleMaps(LatLng location) async {
     final googleUrl = Uri.parse(
         'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
@@ -171,65 +172,53 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       );
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mapa de Lugares')),
-      body: Stack(
+      appBar: AppBar(
+        title: const Text('Mapa de Lugares'),
+      ),
+      body: Column(
         children: [
-          GoogleMap(
-            onMapCreated: (controller) => _mapController = controller,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: _zoomVal,
+          // Sección de selección de intereses con FilterChips
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: availablePlaceTypes.map((type) {
+                final isSelected = selectedPlaceTypes.contains(type);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: FilterChip(
+                    label: Text(type.toUpperCase()),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          selectedPlaceTypes.add(type);
+                        } else {
+                          selectedPlaceTypes.remove(type);
+                        }
+                        // Actualiza los marcadores según la nueva selección
+                        _updateMarkers();
+                      });
+                    },
+                  ),
+                );
+              }).toList(),
             ),
-            markers: _markers,
-            mapType: MapType.normal,
           ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            child: Card(
-              color: Colors.white70,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          // Mapa
+          Expanded(
+            child: GoogleMap(
+              onMapCreated: (controller) => _mapController = controller,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: _zoomVal,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: showGyms,
-                          onChanged: (val) {
-                            setState(() {
-                              showGyms = val ?? false;
-                              _updateMarkers();
-                            });
-                          },
-                        ),
-                        const Text('Gimnasios'),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: showStores,
-                          onChanged: (val) {
-                            setState(() {
-                              showStores = val ?? false;
-                              _updateMarkers();
-                            });
-                          },
-                        ),
-                        const Text('Tiendas'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              markers: _markers,
+              mapType: MapType.normal,
             ),
           ),
         ],

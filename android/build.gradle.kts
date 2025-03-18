@@ -1,3 +1,17 @@
+// Archivo android/build.gradle
+
+buildscript {
+    repositories {
+        google()  // Repositorio de Google
+        mavenCentral()  // Repositorio Maven
+    }
+    dependencies {
+        // Dependencia para la construcción de proyectos Android
+           classpath("com.android.tools.build:gradle:7.4.0")
+    classpath("com.google.gms:google-services:4.4.0")
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -12,6 +26,7 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
