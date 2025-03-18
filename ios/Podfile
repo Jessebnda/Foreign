@@ -1,3 +1,29 @@
-workspace 'FLUTTER_APPLICATION_1.xcworkspace'
+# ios/Podfile
 
 platform :ios, '14.0'
+use_frameworks!
+use_modular_headers!
+
+workspace 'FLUTTER_APPLICATION_1.xcworkspace'
+
+target 'Runner' do
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Firebase Core (para inicializar Firebase)
+  pod 'Firebase/Core'
+
+  # Firebase App Distribution (para distribuir builds a testers)
+  pod 'FirebaseAppDistribution'
+
+  # Google Maps SDK para iOS
+  pod 'GoogleMaps'
+
+  # Si más adelante quieres Place Autocomplete u otros servicios de Places:
+  # pod 'GooglePlaces'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
