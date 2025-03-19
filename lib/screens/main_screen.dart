@@ -70,9 +70,7 @@ class _MainScreenState extends State<MainScreen> {
                   ],
                 ),
                 // El contenido principal (Expanded) es la página seleccionada
-                Expanded(
-                  child: _pages[_selectedIndex],
-                ),
+                Expanded(child: _pages[_selectedIndex]),
               ],
             ),
           );
@@ -84,18 +82,9 @@ class _MainScreenState extends State<MainScreen> {
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,
               items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Feed',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.map),
-                  label: 'Mapa',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.forum),
-                  label: 'Foro',
-                ),
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
+                BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Foro'),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.school),
                   label: 'Mentor',
@@ -104,7 +93,6 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.person),
                   label: 'Perfil',
                 ),
-                
               ],
             ),
           );
