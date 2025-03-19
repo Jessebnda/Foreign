@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'publication_detail_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String name = "Jesse Banda";
   String origin = "Mexicali";
   List<String> interests = ["gimnasio", "programación", "deportes"];
+  String profileImage = 'assets/images/img7.jpg';
   
   // Publicaciones (lista de rutas de imagen)
   List<String> publications = [
@@ -24,6 +26,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'assets/images/img6.jpg',
   ];
 
+  void _editProfile() async {
+    // Usa showModalBottomSheet para presentar la pantalla de edición como modal de pantalla completa.
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true, // Para permitir modal de pantalla completa
+      builder: (context) => FractionallySizedBox(
+        heightFactor: 0.95, // Ajusta el porcentaje de la pantalla
+        child: EditProfileScreen(
+          currentName: name,
+          currentOrigin: origin,
+          currentInterests: interests,
+          currentProfileImage: profileImage,
+        ),
+      ),
+    );
+    
+    // Si se retornen datos, actualiza el estado del perfil
+    if (result != null) {
+      setState(() {
+        name = result['name'] as String;
+        origin = result['origin'] as String;
+        interests = List<String>.from(result['interests'] as List);
+        profileImage = result['profileImage'] as String;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Navegar a pantalla de edición si se requiere
-            },
+            onPressed: _editProfile,
           )
         ],
       ),
@@ -46,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundImage: const AssetImage('assets/images/img7.jpg'),
+                backgroundImage: AssetImage(profileImage),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -95,7 +122,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final imagePath = publications[index];
               return InkWell(
                 onTap: () {
-                  // Navega a PublicationDetailScreen reutilizando el widget de detalles
                   Navigator.push(
                     context,
                     MaterialPageRoute(
